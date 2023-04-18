@@ -2,9 +2,9 @@
   <div>
     <el-form ref="config" :model="formData" :rules="rules" size="medium" label-width="150px">
       <el-divider content-position="left">基础配置</el-divider>
-      <el-form-item label="数据源" prop="datasource">
-        <el-select v-model="formData.datasource" placeholder="请选择数据源" filterable :style="{width: '30%'}">
-          <el-option v-for="(item, index) in datasourceOptions" :key="index" :label="item.label"
+      <el-form-item label="数据源" prop="dataSource">
+        <el-select v-model="formData.dataSource" placeholder="请选择数据源" filterable :style="{width: '30%'}">
+          <el-option v-for="(item, index) in dataSourceOptions" :key="index" :label="item.label"
                      :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
       </el-form-item>
@@ -48,7 +48,7 @@
         </el-input>
       </el-form-item>
       <el-divider content-position="left">数据源配置</el-divider>
-      <el-row v-if="formData.datasource == 'hollidcs'">
+      <el-row v-if="formData.dataSource == 'hollidcs'">
         <el-form-item label="dcsServerUrl" prop="dcsServerUrl">
           <el-input v-model="formData.dcsServerUrl" placeholder="请输入dcsServerUrl" :style="{width: '30%'}">
           </el-input>
@@ -73,7 +73,7 @@
           </el-input>
         </el-form-item>
       </el-row>
-      <el-row v-if="formData.datasource == 'holliview'">
+      <el-row v-if="formData.dataSource == 'holliview'">
         <el-form-item label="CCTOOL地址" prop="scadaProjServerUrl">
           <el-input v-model="formData.scadaProjServerUrl" placeholder="请输入CCTOOL地址" :style="{width: '30%'}">
           </el-input>
@@ -94,9 +94,9 @@
           <el-input v-model="formData.scadaHomePage" placeholder="请输入主页JSON地址" :style="{width: '30%'}"></el-input>
         </el-form-item>
         <el-form-item label="开启免登录" prop="defaultNeedLogin" required>
-          <el-switch v-model="formData.defaultNeedLogin" :active-value='false' :inactive-value='true'></el-switch>
+          <el-switch v-model="formData.defaultNeedLogin" :active-value=false :inactive-value=true></el-switch>
         </el-form-item>
-        <el-row v-if="!formData.needLogin">
+        <el-row v-if="!formData.defaultNeedLogin">
           <el-form-item label="用户名" prop="defaultUserName">
             <el-input v-model="formData.defaultUserName" placeholder="请输入用户名" :style="{width: '30%'}"></el-input>
           </el-form-item>
@@ -112,7 +112,7 @@
           <el-switch v-model="formData.captcha"></el-switch>
         </el-form-item>
       </el-row>
-      <el-row v-if="formData.datasource == 'hollicube'">
+      <el-row v-if="formData.dataSource == 'hollicube'">
         <el-form-item label="应用标识" prop="cubeClientId">
           <el-input v-model="formData.cubeClientId" placeholder="请输入应用标识" :style="{width: '30%'}"></el-input>
         </el-form-item>
@@ -197,12 +197,16 @@
           <el-input v-model="formData.dockerHarborType" placeholder="请输入Harbor仓库类型" clearable
                     :style="{width: '30%'}"></el-input>
         </el-form-item>
-        <el-form-item label="Harbor租户/项目名" prop="docker.dockerHarborRepValue">
-          <el-input v-model="formData.dockerHarborRepValue" placeholder="请输入Harbor租户/项目名" clearable
-                    :style="{width: '30%'}"></el-input>
+        <el-form-item label="Harbor租户/项目名" prop="dockerHarborRepValue">
+          <el-input
+            v-model="formData.dockerHarborRepValue"
+            placeholder="请输入Harbor租户/项目名"
+            clearable
+            :style="{width: '30%'}"
+          />
         </el-form-item>
       </el-row>
-      <el-row v-if="formData.datasource == 'holliunity'">
+      <el-row v-if="formData.dataSource == 'holliunity'">
         <el-form-item label="服务注册中心地址" prop="serviceUrl">
           <el-input v-model="formData.iotServiceUrl" placeholder="请输入服务注册中心地址" :style="{width: '30%'}"></el-input>
         </el-form-item>
@@ -228,7 +232,8 @@
 </template>
 <script>
 
-import { updateConfig } from '@/api/sysConfig'
+import { getConfig, updateConfig } from '@/api/sysConfig'
+import { Message } from 'element-ui'
 
 export default {
   components: {},
@@ -236,69 +241,68 @@ export default {
   data() {
     return {
       formData: {
-        datasource: "holliview",
+        dataSource: 'holliview',
         treeMode: true,
-        touchMode: "auto",
+        touchMode: 'auto',
         allowWeb: true,
         captcha: true,
         keepCopyright: true,
-        allowIps: "0.0.0.0",
-        dcsServerUrl: "http://172.21.32.180:8690",
-        dcsClientId: "holliview",
-        dcsSsoConsole: "http://172.21.32.180:8800",
-        dcsSsoService: "http://172.21.32.180:8790",
-        dcsResourceUrl: "http://172.21.32.180:8580",
-        dcsPermissionUrl: "http://172.21.32.180:8560",
-        scadaProjServerUrl: "http://127.0.0.1:9081",
-        scadaWebapiUrl: "http://127.0.0.1:8182",
-        scadaLoginPage: "",
-        scadaPwdPage: "",
-        scadaHomePage: "",
+        allowIps: '0.0.0.0',
+        dcsServerUrl: 'http://172.21.32.180:8690',
+        dcsClientId: 'holliview',
+        dcsSsoConsole: 'http://172.21.32.180:8800',
+        dcsSsoService: 'http://172.21.32.180:8790',
+        dcsResourceUrl: 'http://172.21.32.180:8580',
+        dcsPermissionUrl: 'http://172.21.32.180:8560',
+        scadaProjServerUrl: 'http://127.0.0.1:9081',
+        scadaWebapiUrl: 'http://127.0.0.1:8182',
+        scadaLoginPage: '',
+        scadaPwdPage: '',
+        scadaHomePage: '',
         defaultNeedLogin: false,
-        defaultUserName: "Admin",
-        defaultPassword: "6666669",
-        defaultRole: "Admin",
+        defaultUserName: 'Admin',
+        defaultPassword: '6666669',
+        defaultRole: 'Admin',
         defaultEnableMultiUser: false,
         defaultSessionTimeout: 60,
-        cubeClientId: "hollysys-holliview123",
-        cubeModelId: "holli-model",
-        cubeSsoConsole: "http://sso-svc-public.hollicube.com",
-        cubeSsoService: "http://sso-svc-bkend.hollicube.com",
-        cubeIamService: "http://iam-svc.hollicube.com",
-        cubeModelUrl: "http://model-svc.hollicube.com",
+        cubeClientId: 'hollysys-holliview123',
+        cubeModelId: 'holli-model',
+        cubeSsoConsole: 'http://sso-svc-public.hollicube.com',
+        cubeSsoService: 'http://sso-svc-bkend.hollicube.com',
+        cubeIamService: 'http://iam-svc.hollicube.com',
+        cubeModelUrl: 'http://model-svc.hollicube.com',
         cubeModelFiltered: false,
-        cubeAggqueryUrl: "http://aggquery-svc.hollicube.com",
-        cubeSocketServiceUrl: "ws://model-san-svc.hollicube.com",
-        cubeAlarmServiceUrl: "http://alarm-san-svc.hollicube.com",
-        cubeAlarmConfirmUrl: "http://alarm-cfm-svc.hollicube.com",
-        cubeEventUrl: "http://event-query-svc.hollicube.com",
-        cubeBffUrl: "http://model-holli-bff.hollicube.com",
-        cubeSendMsgNamespace: "hollysys-project123",
-        cubeGatewayUrl: "http://holli-iotda-data-engine-svc.hollysys-default:9111/iotda-data-engine",
-        cubePredictModelUrl: "http://127.0.0.1:28088",
-        cubePredictUrl: "http://127.0.0.1:18190",
-        dockerServer: "http://192.168.2.227:5500",
-        dockerHarbor: "192.168.2.227:443",
-        dockerHarborNam: "hollysys",
-        dockerHarborPwd: "Hollysys1234",
-        dockerHarborEmail: "admin@example.com",
-        dockerHarborType: "default",
-        dockerHarborRepValue: "hollysys-hollysys123",
-        dockerDav: "dockerDav",
-        contextPath: "",
-        iotServiceUrl: "http://172.21.75.237:8090",
-        iotProjectId: "627d9113734a7e0013544ca3",
-        iotLoginPage: "",
-        iotPwdPage: "",
-        iotHomePage: "",
-        logLevel: "info",
-        logDay: "30",
-        logSize: "",
-        logMax: "",
-
+        cubeAggqueryUrl: 'http://aggquery-svc.hollicube.com',
+        cubeSocketServiceUrl: 'ws://model-san-svc.hollicube.com',
+        cubeAlarmServiceUrl: 'http://alarm-san-svc.hollicube.com',
+        cubeAlarmConfirmUrl: 'http://alarm-cfm-svc.hollicube.com',
+        cubeEventUrl: 'http://event-query-svc.hollicube.com',
+        cubeBffUrl: 'http://model-holli-bff.hollicube.com',
+        cubeSendMsgNamespace: 'hollysys-project123',
+        cubeGatewayUrl: 'http://holli-iotda-data-engine-svc.hollysys-default:9111/iotda-data-engine',
+        cubePredictModelUrl: 'http://127.0.0.1:28088',
+        cubePredictUrl: 'http://127.0.0.1:18190',
+        dockerServer: 'http://192.168.2.227:5500',
+        dockerHarbor: '192.168.2.227:443',
+        dockerHarborNam: 'hollysys',
+        dockerHarborPwd: 'Hollysys1234',
+        dockerHarborEmail: 'admin@example.com',
+        dockerHarborType: 'default',
+        dockerHarborRepValue: 'hollysys-hollysys123',
+        dockerDav: 'dockerDav',
+        contextPath: '',
+        iotServiceUrl: 'http://172.21.75.237:8090',
+        iotProjectId: '627d9113734a7e0013544ca3',
+        iotLoginPage: '',
+        iotPwdPage: '',
+        iotHomePage: '',
+        logLevel: 'info',
+        logDay: '30',
+        logSize: '',
+        logMax: ''
       },
       rules: {
-        datasource: [{
+        dataSource: [{
           required: true,
           message: '请选择数据源',
           trigger: 'change'
@@ -372,61 +376,66 @@ export default {
           required: true,
           message: '请输入角色',
           trigger: 'blur'
-        }],
+        }]
       },
-      datasourceOptions: [{
-        "label": "SCADA",
-        "value": "holliview"
+      dataSourceOptions: [{
+        'label': 'SCADA',
+        'value': 'holliview'
       }, {
-        "label": "CUBE",
-        "value": "hollicube"
+        'label': 'CUBE',
+        'value': 'hollicube'
       }, {
-        "label": "DCS",
-        "value": "hollidcs"
+        'label': 'DCS',
+        'value': 'hollidcs'
       }, {
-        "label": "Unity",
-        "value": "holliunity"
+        'label': 'Unity',
+        'value': 'holliunity'
       }, {
-        "label": "RTDB",
-        "value": "relationdb"
+        'label': 'RTDB',
+        'value': 'relationdb'
       }],
       treeModeOptions: [{
-        "label": "树状显示",
-        "value": true
+        'label': '树状显示',
+        'value': true
       }, {
-        "label": "平铺显示",
-        "value": false
+        'label': '平铺显示',
+        'value': false
       }],
       touchModeOptions: [{
-        "label": "自适应",
-        "value": "auto"
+        'label': '自适应',
+        'value': 'auto'
       }, {
-        "label": "触屏",
-        "value": "true"
+        'label': '触屏',
+        'value': 'true'
       }, {
-        "label": "键鼠",
-        "value": "false"
+        'label': '键鼠',
+        'value': 'false'
       }],
     }
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    getConfig().then(data => {
+      this.formData = data.data
+    })
+  },
   mounted() {},
   methods: {
     submitForm() {
       this.$refs['config'].validate(valid => {
         if (!valid) return
-        // TODO 提交表单
-        console.log('提交表单')
         updateConfig(this.formData).then((data) => {
-          console.log(data)
+          Message({
+            message: '修改成功',
+            type: 'success'
+          })
         })
       })
     },
     resetForm() {
       this.$refs['config'].resetFields()
-    },
+    }
   }
 }
 

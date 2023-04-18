@@ -1,8 +1,8 @@
 import request from '@/utils/request'
 
-export function getConfig() {
+export function getAllServiceStatus() {
   return request({
-    url: '/hv-console/commonConfig',
+    url: '/hv-guard/guard/getAllService',
     method: 'get'
   })
 }
