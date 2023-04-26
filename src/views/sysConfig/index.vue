@@ -1,231 +1,230 @@
 <template>
   <div>
-    <el-form ref="config" :model="formData" :rules="rules" size="medium" label-width="150px">
+    <el-form ref="config" :model="formData" :rules="rules" size="medium" label-width="250px">
       <el-divider content-position="left">基础配置</el-divider>
       <el-form-item label="数据源" prop="dataSource">
-        <el-select v-model="formData.dataSource" placeholder="请选择数据源" filterable :style="{width: '30%'}">
-          <el-option v-for="(item, index) in dataSourceOptions" :key="index" :label="item.label"
-                     :value="item.value" :disabled="item.disabled"></el-option>
+        <el-select v-model="formData.dataSource" placeholder="请选择数据源" filterable>
+          <el-option
+            v-for="(item, index) in dataSourceOptions"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+            :disabled="item.disabled"
+          />
         </el-select>
       </el-form-item>
       <el-form-item label="文件树显示" prop="treeMode">
         <el-radio-group v-model="formData.treeMode" size="medium">
-          <el-radio v-for="(item, index) in treeModeOptions" :key="index" :label="item.value"
-                    :disabled="item.disabled">{{item.label}}</el-radio>
+          <el-radio
+            v-for="(item, index) in treeModeOptions"
+            :key="index"
+            :label="item.value"
+            :disabled="item.disabled"
+          >{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="触控模式" prop="touchMode">
         <el-radio-group v-model="formData.touchMode" size="medium">
-          <el-radio v-for="(item, index) in touchModeOptions" :key="index" :label="item.value"
-                    :disabled="item.disabled">{{item.label}}</el-radio>
+          <el-radio
+            v-for="(item, index) in touchModeOptions"
+            :key="index"
+            :label="item.value"
+            :disabled="item.disabled"
+          >{{ item.label }}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="允许web端" prop="allowWeb" required>
-        <el-switch v-model="formData.allowWeb"></el-switch>
+        <el-switch v-model="formData.allowWeb" />
       </el-form-item>
       <el-form-item label="开启 '关于' " prop="keepCopyright" required>
-        <el-switch v-model="formData.keepCopyright"></el-switch>
+        <el-switch v-model="formData.keepCopyright" />
       </el-form-item>
-      <el-form-item label="授权IP列表" prop="allowIps">
-        <el-input v-model="formData.allowIps" placeholder="请输入授权IP列表" clearable :style="{width: '30%'}">
-        </el-input>
+      <el-form-item label="授权IP列表" prop="allowIps" required>
+        <el-input v-model="formData.allowIps" placeholder="请输入授权IP列表" />
       </el-form-item>
       <el-divider content-position="left">日志输出配置</el-divider>
-      <el-form-item label="默认输出等级" prop="logLevel">
-        <el-input v-model="formData.logLevel" placeholder="日志默认输出等级" clearable :style="{width: '30%'}">
-        </el-input>
+      <el-form-item label="默认输出等级" prop="logLevel" required>
+        <el-input v-model="formData.logLevel" placeholder="日志默认输出等级" />
       </el-form-item>
-      <el-form-item label="最长保存天数" prop="logDay">
-        <el-input v-model="formData.logDay" placeholder="请输入日志最长保存天数" clearable :style="{width: '30%'}">
-        </el-input>
+      <el-form-item label="最长保存天数" prop="logDay" required>
+        <el-input v-model="formData.logDay" placeholder="请输入日志最长保存天数" type="number" />
       </el-form-item>
-      <el-form-item label="每天日志最大数量" prop="logSize">
-        <el-input v-model="formData.logSize" placeholder="请输入每天日志最多保存数量" clearable :style="{width: '30%'}">
-        </el-input>
+      <el-form-item label="每天日志最大数量" prop="logSize" required>
+        <el-input v-model="formData.logSize" placeholder="请输入每天日志最多保存数量" type="number" />
       </el-form-item>
-      <el-form-item label="每个日志文件大小" prop="logMax">
-        <el-input v-model="formData.logMax" placeholder="请输入每个日志文件大小" clearable :style="{width: '30%'}">
-        </el-input>
+      <el-form-item label="每个日志文件大小" prop="logMax" required>
+        <el-input v-model="formData.logMax" placeholder="请输入每个日志文件大小" type="number" />
+      </el-form-item>
+      <el-divider content-position="left">Socket连接配置</el-divider>
+      <el-form-item label="心跳发送间隔" prop="logMax" required>
+        <el-input v-model="formData.socketConfigIntervalTime" placeholder="请输入心跳发送间隔" type="number" />
+      </el-form-item>
+      <el-form-item label="心跳错误次数" prop="logMax" required>
+        <el-input v-model="formData.socketConfigErrorCount" placeholder="请输入心跳错误次数" type="number" />
       </el-form-item>
       <el-divider content-position="left">数据源配置</el-divider>
       <el-row v-if="formData.dataSource == 'hollidcs'">
         <el-form-item label="dcsServerUrl" prop="dcsServerUrl">
-          <el-input v-model="formData.dcsServerUrl" placeholder="请输入dcsServerUrl" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dcsServerUrl" placeholder="请输入dcsServerUrl" />
         </el-form-item>
         <el-form-item label="dcsClientId" prop="dcsClientId">
-          <el-input v-model="formData.dcsClientId" placeholder="请输入clientId" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.dcsClientId" placeholder="请输入clientId" />
         </el-form-item>
         <el-form-item label="dcsSsoConsole" prop="dcsSsoConsole">
-          <el-input v-model="formData.dcsSsoConsole" placeholder="请输入ssoConsole" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dcsSsoConsole" placeholder="请输入ssoConsole" />
         </el-form-item>
         <el-form-item label="dcsSsoService" prop="dcsSsoService">
-          <el-input v-model="formData.dcsSsoService" placeholder="请输入ssoService" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dcsSsoService" placeholder="请输入ssoService" />
         </el-form-item>
         <el-form-item label="dcsResourceUrl" prop="dcsResourceUrl">
-          <el-input v-model="formData.dcsResourceUrl" placeholder="请输入resourceUrl" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dcsResourceUrl" placeholder="请输入resourceUrl" />
         </el-form-item>
         <el-form-item label="dcsPermissionUrl" prop="dcsPermissionUrl">
-          <el-input v-model="formData.dcsPermissionUrl" placeholder="请输入permissionUrl" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dcsPermissionUrl" placeholder="请输入permissionUrl" />
         </el-form-item>
       </el-row>
       <el-row v-if="formData.dataSource == 'holliview'">
         <el-form-item label="CCTOOL地址" prop="scadaProjServerUrl">
-          <el-input v-model="formData.scadaProjServerUrl" placeholder="请输入CCTOOL地址" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.scadaProjServerUrl" placeholder="请输入CCTOOL地址" />
         </el-form-item>
         <el-form-item label="WebAPI" prop="scadaWebapiUrl">
-          <el-input v-model="formData.scadaWebapiUrl" placeholder="请输入WebAPI" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.scadaWebapiUrl" placeholder="请输入WebAPI" />
         </el-form-item>
-        <el-form-item label="session过期时间" prop="defaultSessionTimeout">
-          <el-input v-model="formData.defaultSessionTimeout" placeholder="请输入session过期时间" :style="{width: '30%'}"></el-input>
+        <el-form-item label="session过期时间" prop="defaultSessionTimeout" required>
+          <el-input v-model="formData.defaultSessionTimeout" placeholder="请输入session过期时间" />
         </el-form-item>
         <el-form-item label="登陆页面" prop="scadaLoginPage">
-          <el-input v-model="formData.scadaLoginPage" placeholder="请输入登陆页面JSON地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.scadaLoginPage" placeholder="请输入登陆页面JSON地址" />
         </el-form-item>
         <el-form-item label="密码页面" prop="scadaPwdPage">
-          <el-input v-model="formData.scadaPwdPage" placeholder="请输入密码页面JSON地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.scadaPwdPage" placeholder="请输入密码页面JSON地址" />
         </el-form-item>
         <el-form-item label="主页地址" prop="scadaHomePage">
-          <el-input v-model="formData.scadaHomePage" placeholder="请输入主页JSON地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.scadaHomePage" placeholder="请输入主页JSON地址" />
         </el-form-item>
         <el-form-item label="开启免登录" prop="defaultNeedLogin" required>
-          <el-switch v-model="formData.defaultNeedLogin" :active-value=false :inactive-value=true></el-switch>
+          <el-switch v-model="formData.defaultNeedLogin" :active-value="false" :inactive-value="true" />
         </el-form-item>
         <el-row v-if="!formData.defaultNeedLogin">
-          <el-form-item label="用户名" prop="defaultUserName">
-            <el-input v-model="formData.defaultUserName" placeholder="请输入用户名" :style="{width: '30%'}"></el-input>
+          <el-form-item label="用户名" prop="defaultUserName" required>
+            <el-input v-model="formData.defaultUserName" placeholder="请输入用户名" />
           </el-form-item>
-          <el-form-item label="密码" prop="defaultPassword">
-            <el-input v-model="formData.defaultPassword" placeholder="请输入密码" show-password :style="{width: '30%'}">
-            </el-input>
+          <el-form-item label="密码" prop="defaultPassword" required>
+            <el-input v-model="formData.defaultPassword" placeholder="请输入密码" show-password />
           </el-form-item>
-          <el-form-item label="角色" prop="defaultRole">
-            <el-input v-model="formData.defaultRole" placeholder="请输入角色" :style="{width: '30%'}"></el-input>
+          <el-form-item label="角色" prop="defaultRole" required>
+            <el-input v-model="formData.defaultRole" placeholder="请输入角色" />
           </el-form-item>
         </el-row>
         <el-form-item label="开启验证码" prop="captcha" required>
-          <el-switch v-model="formData.captcha"></el-switch>
+          <el-switch v-model="formData.captcha" />
         </el-form-item>
       </el-row>
       <el-row v-if="formData.dataSource == 'hollicube'">
         <el-form-item label="应用标识" prop="cubeClientId">
-          <el-input v-model="formData.cubeClientId" placeholder="请输入应用标识" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubeClientId" placeholder="请输入应用标识" />
         </el-form-item>
         <el-form-item label="模型应用标识" prop="cubeModelId">
-          <el-input v-model="formData.cubeModelId" placeholder="请输入模型应用标识" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubeModelId" placeholder="请输入模型应用标识" />
         </el-form-item>
         <el-form-item label="cubeSsoConsole" prop="cubeSsoConsole">
-          <el-input v-model="formData.cubeSsoConsole" placeholder="请输入sso-console" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeSsoConsole" placeholder="请输入sso-console" />
         </el-form-item>
         <el-form-item label="cubeSsoService" prop="cubeSsoService">
-          <el-input v-model="formData.cubeSsoService" placeholder="请输入sso-service" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeSsoService" placeholder="请输入sso-service" />
         </el-form-item>
         <el-form-item label="cubeIamService" prop="cubeIamService">
-          <el-input v-model="formData.cubeIamService" placeholder="请输入iam-service" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeIamService" placeholder="请输入iam-service" />
         </el-form-item>
         <el-form-item label="模型服务地址" prop="cubeModelUrl">
-          <el-input v-model="formData.cubeModelUrl" placeholder="请输入模型服务地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubeModelUrl" placeholder="请输入模型服务地址" />
         </el-form-item>
         <el-form-item label="启用模型过滤" prop="cubeModelFiltered">
-          <el-switch v-model="formData.cubeModelFiltered"></el-switch>
+          <el-switch v-model="formData.cubeModelFiltered" />
         </el-form-item>
         <el-form-item label="聚合服务地址" prop="cubeAggqueryUrl">
-          <el-input v-model="formData.cubeAggqueryUrl" placeholder="请输入聚合服务地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubeAggqueryUrl" placeholder="请输入聚合服务地址" />
         </el-form-item>
         <el-form-item label="WebSocket地址" prop="cubeSocketServiceUrl">
-          <el-input v-model="formData.cubeSocketServiceUrl" placeholder="请输入WebSocket地址" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeSocketServiceUrl" placeholder="请输入WebSocket地址" />
         </el-form-item>
         <el-form-item label="报警数据服务" prop="cubeAlarmServiceUrl">
-          <el-input v-model="formData.cubeAlarmServiceUrl" placeholder="请输入报警数据服务" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeAlarmServiceUrl" placeholder="请输入报警数据服务" />
         </el-form-item>
         <el-form-item label="报警确认服务" prop="cubeAlarmConfirmUrl">
-          <el-input v-model="formData.cubeAlarmConfirmUrl" placeholder="请输入报警确认服务" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeAlarmConfirmUrl" placeholder="请输入报警确认服务" />
         </el-form-item>
         <el-form-item label="事件服务" prop="cubeEventUrl">
-          <el-input v-model="formData.cubeEventUrl" placeholder="请输入事件服务" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubeEventUrl" placeholder="请输入事件服务" />
         </el-form-item>
         <el-form-item label="物联服务" prop="cubeBffUrl">
-          <el-input v-model="formData.cubeBffUrl" placeholder="请输入物联服务" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubeBffUrl" placeholder="请输入物联服务" />
         </el-form-item>
         <el-form-item label="租户/命名空间" prop="cubeSendMsgNamespace">
-          <el-input v-model="formData.cubeSendMsgNamespace" placeholder="请输入租户/命名空间" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeSendMsgNamespace" placeholder="请输入租户/命名空间" />
         </el-form-item>
         <el-form-item label="指令下发(网关)服务" prop="cubeGatewayUrl">
-          <el-input v-model="formData.cubeGatewayUrl" placeholder="请输入指令下发(网关)服务" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubeGatewayUrl" placeholder="请输入指令下发(网关)服务" />
         </el-form-item>
         <el-form-item label="预测模型服务地址" prop="cubePredictModelUrl">
-          <el-input v-model="formData.cubePredictModelUrl" placeholder="请输入预测模型服务地址" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.cubePredictModelUrl" placeholder="请输入预测模型服务地址" />
         </el-form-item>
         <el-form-item label="预测数据服务" prop="cubePredictUrl">
-          <el-input v-model="formData.cubePredictUrl" placeholder="请输入预测数据服务" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.cubePredictUrl" placeholder="请输入预测数据服务" />
         </el-form-item>
         <el-form-item label="Docker服务地址" prop="dockerServer">
-          <el-input v-model="formData.dockerServer" placeholder="请输入Docker服务地址" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dockerServer" placeholder="请输入Docker服务地址" />
         </el-form-item>
         <el-form-item label="Harbor仓库地址" prop="dockerHarbor">
-          <el-input v-model="formData.dockerHarbor" placeholder="请输入Harbor仓库地址" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dockerHarbor" placeholder="请输入Harbor仓库地址" />
         </el-form-item>
         <el-form-item label="Harbor仓库用户名" prop="dockerHarborNam">
-          <el-input v-model="formData.dockerHarborNam" placeholder="请输入Harbor仓库用户名" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dockerHarborNam" placeholder="请输入Harbor仓库用户名" />
         </el-form-item>
         <el-form-item label="Harbor仓库密码" prop="dockerHarborPwd">
-          <el-input v-model="formData.dockerHarborPwd" placeholder="请输入Harbor仓库密码" show-password
-                    :style="{width: '30%'}"></el-input>
+          <el-input
+            v-model="formData.dockerHarborPwd"
+            placeholder="请输入Harbor仓库密码"
+            show-password
+          />
         </el-form-item>
         <el-form-item label="Harbor仓库联系人" prop="docker.dockerHarborEmail">
-          <el-input v-model="formData.dockerHarborEmail" placeholder="请输入Harbor仓库联系人" :style="{width: '30%'}">
-          </el-input>
+          <el-input v-model="formData.dockerHarborEmail" placeholder="请输入Harbor仓库联系人" />
         </el-form-item>
         <el-form-item label="Harbor仓库类型" prop="dockerHarborType">
-          <el-input v-model="formData.dockerHarborType" placeholder="请输入Harbor仓库类型" clearable
-                    :style="{width: '30%'}"></el-input>
+          <el-input
+            v-model="formData.dockerHarborType"
+            placeholder="请输入Harbor仓库类型"
+            clearable
+          />
         </el-form-item>
         <el-form-item label="Harbor租户/项目名" prop="dockerHarborRepValue">
           <el-input
             v-model="formData.dockerHarborRepValue"
             placeholder="请输入Harbor租户/项目名"
             clearable
-            :style="{width: '30%'}"
           />
         </el-form-item>
       </el-row>
       <el-row v-if="formData.dataSource == 'holliunity'">
         <el-form-item label="服务注册中心地址" prop="serviceUrl">
-          <el-input v-model="formData.iotServiceUrl" placeholder="请输入服务注册中心地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.iotServiceUrl" placeholder="请输入服务注册中心地址" />
         </el-form-item>
         <el-form-item label="项目ID" prop="projectId">
-          <el-input v-model="formData.iotProjectId" placeholder="请输入项目ID" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.iotProjectId" placeholder="请输入项目ID" />
         </el-form-item>
         <el-form-item label="登陆页面" prop="iotLoginPage">
-          <el-input v-model="formData.iotLoginPage" placeholder="请输入登陆页面JSON地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.iotLoginPage" placeholder="请输入登陆页面JSON地址" />
         </el-form-item>
         <el-form-item label="密码页面" prop="iotPwdPage">
-          <el-input v-model="formData.iotPwdPage" placeholder="请输入密码页面JSON地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.iotPwdPage" placeholder="请输入密码页面JSON地址" />
         </el-form-item>
         <el-form-item label="主页地址" prop="iotHomePage">
-          <el-input v-model="formData.iotHomePage" placeholder="请输入主页JSON地址" :style="{width: '30%'}"></el-input>
+          <el-input v-model="formData.iotHomePage" placeholder="请输入主页JSON地址" />
         </el-form-item>
       </el-row>
       <el-form-item size="large">
         <el-button type="primary" @click="submitForm">提交</el-button>
-        <el-button @click="resetForm">重置</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -299,7 +298,9 @@ export default {
         logLevel: 'info',
         logDay: '30',
         logSize: '',
-        logMax: ''
+        logMax: '',
+        socketConfigIntervalTime: 1,
+        socketConfigErrorCount: 2
       },
       rules: {
         dataSource: [{
@@ -410,7 +411,7 @@ export default {
       }, {
         'label': '键鼠',
         'value': 'false'
-      }],
+      }]
     }
   },
   computed: {},
@@ -440,5 +441,14 @@ export default {
 }
 
 </script>
-<style>
+<style scoped>
+ .el-divider {
+  margin: 30px 0;
+   font-size: 50px;
+   font-weight: bold;
+}
+ .el-input, .el-select{
+   width: 30%;
+ }
+ /*}*/
 </style>

@@ -24,11 +24,18 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
-  outputDir: 'dist',
-  assetsDir: 'static',
+  publicPath: './',
+  outputDir: './dist',
+  assetsDir: './static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  indexPath: './config.html',
+  // pages: {
+  //   index: {
+  //     entry: 'src/main.js',
+  //     filename: 'index.html'
+  //   }
+  // },
   devServer: {
     port: port,
     open: true,
@@ -46,6 +53,14 @@ module.exports = {
         changeOrigin: true, // 是否跨域
         // 重写路径，此时用于匹配反向代理的/api可以替换为空
         pathRewrite: { '^/hv-console': '' }
+      },
+      // 代理请求， 匹配所有以/api开头的请求
+      '/hv-rtdb': {
+        // 目标服务器，所有以/api开头的请求接口代理到目标服务器
+        target: 'http://localhost:8003',
+        changeOrigin: true, // 是否跨域
+        // 重写路径，此时用于匹配反向代理的/api可以替换为空
+        pathRewrite: { '^/hv-rtdb': '' }
       },
       '/hv-guard': {
         // 目标服务器，所有以/api开头的请求接口代理到目标服务器
@@ -67,16 +82,16 @@ module.exports = {
     }
   },
   chainWebpack(config) {
-    // it can improve the speed of the first screen, it is recommended to turn on preload
-    config.plugin('preload').tap(() => [
-      {
-        rel: 'preload',
-        // to ignore runtime.js
-        // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
-        fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
-        include: 'initial'
-      }
-    ])
+    //it can improve the speed of the first screen, it is recommended to turn on preload
+    // config.plugin('preload').tap(() => [
+    //   {
+    //     rel: 'preload',
+    //     // to ignore runtime.js
+    //     // https://github.com/vuejs/vue-cli/blob/dev/packages/@vue/cli-service/lib/config/app.js#L171
+    //     fileBlacklist: [/\.map$/, /hot-update\.js$/, /runtime\..*\.js$/],
+    //     include: 'initial'
+    //   }
+    // ])
 
     // when there are many pages, it will cause too many meaningless requests
     config.plugins.delete('prefetch')
@@ -101,14 +116,14 @@ module.exports = {
     config
       .when(process.env.NODE_ENV !== 'development',
         config => {
-          config
-            .plugin('ScriptExtHtmlWebpackPlugin')
-            .after('html')
-            .use('script-ext-html-webpack-plugin', [{
-            // `runtime` must same as runtimeChunk name. default is `runtime`
-              inline: /runtime\..*\.js$/
-            }])
-            .end()
+          // config
+          //   .plugin('ScriptExtHtmlWebpackPlugin')
+          //   .after('html')
+          //   .use('script-ext-html-webpack-plugin', [{
+          //   // `runtime` must same as runtimeChunk name. default is `runtime`
+          //     inline: /runtime\..*\.js$/
+          //   }])
+          //   .end()
           config
             .optimization.splitChunks({
               chunks: 'all',

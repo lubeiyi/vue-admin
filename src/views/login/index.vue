@@ -43,10 +43,10 @@
 
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">Login</el-button>
 
-<!--      <div class="tips">-->
-<!--        <span style="margin-right:20px;">username: admin</span>-->
-<!--        <span> password: any</span>-->
-<!--      </div>-->
+      <!--      <div class="tips">-->
+      <!--        <span style="margin-right:20px;">username: admin</span>-->
+      <!--        <span> password: any</span>-->
+      <!--      </div>-->
 
     </el-form>
   </div>
@@ -108,7 +108,7 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          const hash = CryptoJS.MD5(this.loginForm.password).toString();
+          const hash = CryptoJS.MD5(this.loginForm.password).toString()
           const params = {
             username: this.loginForm.username,
             password: hash
